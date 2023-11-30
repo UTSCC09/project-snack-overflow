@@ -69,37 +69,39 @@ function Video_connection({transcription_text}) {
   // }
   useEffect(() => {
     const webcam_on = async () => {
-      localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      localStream.getTracks().find(track => track.kind === 'audio').enabled = data.state.audio;
-      localStream.getTracks().find(track => track.kind === 'video').enabled = data.state.video;
-      if(data.state.audio === true) {
-        setMicIcon("unmute-icon");
-      }
-      else{
-        setMicIcon("mute-icon");
-      }
-      if(data.state.video === true) {
-        setCameraIcon("camera-on-icon");
-      }
-      else{
-        setCameraIcon("camera-off-icon");
-      }
-      remoteStream = new MediaStream();
-      // Push tracks from local stream to peer connection
-      localStream.getTracks().forEach((track) => {
-          pc.addTrack(track, localStream);
-      });
-    
-      // Pull tracks from remote stream, add to video stream
-      pc.ontrack = event => {
-          event.streams[0].getTracks().forEach(track => {
-              remoteStream.addTrack(track);
-          });
-      };
-      localvideo.current.srcObject = localStream;
-      remotevideo.current.srcObject = remoteStream;
-      setdisabled(false);
-      setIconDisabled("");
+      await navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((ls)=>{
+        localStream = ls;
+        localStream.getTracks().find(track => track.kind === 'audio').enabled = data.state.audio;
+        localStream.getTracks().find(track => track.kind === 'video').enabled = data.state.video;
+        if(data.state.audio === true) {
+          setMicIcon("unmute-icon");
+        }
+        else{
+          setMicIcon("mute-icon");
+        }
+        if(data.state.video === true) {
+          setCameraIcon("camera-on-icon");
+        }
+        else{
+          setCameraIcon("camera-off-icon");
+        }
+        remoteStream = new MediaStream();
+        // Push tracks from local stream to peer connection
+        localStream.getTracks().forEach((track) => {
+            pc.addTrack(track, localStream);
+        });
+      
+        // Pull tracks from remote stream, add to video stream
+        pc.ontrack = event => {
+            event.streams[0].getTracks().forEach(track => {
+                remoteStream.addTrack(track);
+            });
+        };
+        localvideo.current.srcObject = localStream;
+        remotevideo.current.srcObject = remoteStream;
+        setdisabled(false);
+        setIconDisabled("");
+      })
     }
 
     const connectmeeting = async () => {
@@ -116,23 +118,21 @@ function Video_connection({transcription_text}) {
       };
       // Creates SDP offer to start connection with remote users
       // const offerDescription = new RTCSessionDescription(data.state.offerDescription);
-      let offerDescription = (await callDoc.get('offer')).data();
+      let offerDescript = (await callDoc.get('offer')).data();
+      let offerDescription;
       if(offerDescription === undefined){
         offerDescription = await pc.createOffer();
-        console.log("NEW SDP");
+      } else {
+        offerDescription = new RTCSessionDescription(offerDescript.offer);
       }
-      // console.log(offerDescription);
-      console.log(offerDescription.sdp);
       await pc.setLocalDescription(offerDescription); 
       const offer = {
         sdp: offerDescription.sdp,
         type: offerDescription.type,
       };
-  
       //add the SDP and the type of connection to the callID
       await callDoc.set({ offer });
-    
-      // listener for new candidatess added by remote user
+      // listener for new candidates added by remote user
       callDoc.onSnapshot((snapshot) => {
         const data = snapshot.data();
         // check remote connection and if data was received
@@ -153,6 +153,7 @@ function Video_connection({transcription_text}) {
           }
         });
       });
+      console.log("REACHED");
     }
     const answermeeting = async () => {
       // get the callID that the invitee shared and access the data
@@ -179,9 +180,14 @@ function Video_connection({transcription_text}) {
       await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
     
       //create sdp for answerer and store in its localDescription
-      const answerDescription = await pc.createAnswer();
+      let answerDescript = (await callDoc.get('answer')).data();
+      let answerDescription;
+      if(answerDescription === undefined){
+        answerDescription = await pc.createAnswer();
+      } else {
+        answerDescription = new RTCSessionDescription(answerDescript.answer);
+      }
       await pc.setLocalDescription(answerDescription);
-    
       // store the sdp under callID's answer field
       const answer = {
         type: answerDescription.type,
@@ -189,7 +195,6 @@ function Video_connection({transcription_text}) {
       };
     
       await callDoc.update({ answer });
-    
       // Listen to offer candidates for changes in ICEcandidates
       offerCandidates.onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
@@ -199,6 +204,7 @@ function Video_connection({transcription_text}) {
           }
         });
       });
+      console.log("RRREACHED");
     }
     webcam_on().then(()=>{
       connectmeeting().then(() => {
