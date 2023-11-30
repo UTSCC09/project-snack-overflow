@@ -110,15 +110,20 @@ function Video_connection({transcription_text}) {
       // Create new collection
       const offerCandidates = callDoc.collection('offerCandidates');
       const answerCandidates = callDoc.collection('answerCandidates');
-  
       // get ICE candidates for the invitee and save it to firestore database under offerCandidates collection
       pc.onicecandidate = event => {
         event.candidate && offerCandidates.add(event.candidate.toJSON());
       };
       // Creates SDP offer to start connection with remote users
-      const offerDescription = await pc.createOffer();
-      await pc.setLocalDescription(offerDescription);
-    
+      // const offerDescription = new RTCSessionDescription(data.state.offerDescription);
+      let offerDescription = (await callDoc.get('offer')).data();
+      if(offerDescription === undefined){
+        offerDescription = await pc.createOffer();
+        console.log("NEW SDP");
+      }
+      // console.log(offerDescription);
+      console.log(offerDescription.sdp);
+      await pc.setLocalDescription(offerDescription); 
       const offer = {
         sdp: offerDescription.sdp,
         type: offerDescription.type,
@@ -170,6 +175,7 @@ function Video_connection({transcription_text}) {
         return;
       }
       const offerDescription = callData.offer;
+      console.log(callData.offer);
       await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
     
       //create sdp for answerer and store in its localDescription

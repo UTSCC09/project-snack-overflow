@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import classnames from 'classnames';
 import firebase from 'firebase/compat/app';
 import { sendEmail } from '../../services/sendGridApiService.js';
@@ -12,12 +12,11 @@ const firebaseConfig = {
     messagingSenderId: "689507442231",
     appId: "1:689507442231:web:01a87229e518f779f5e9b2",
     measurementId: "G-MVSPE072K6"
-  };
+};
   
-  if (!firebase.apps.length) {
+if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
-  }
-  
+}
 const firestore = firebase.firestore();
 let localStream;
 const emailinput = React.createRef();
@@ -29,6 +28,17 @@ const Create_meeting = () =>{
     const [disabled, setdisabled] = useState(true);
     const localvideo = React.createRef();
     const navigate = useNavigate();
+    useEffect(()=>{
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((ls)=>{
+            localStream = ls;
+            localvideo.current.srcObject = localStream;
+            setdisabled(false);
+            setIconDisabled("");
+            setPmsBtnDisabled("disabled");
+        }).catch((err)=>{
+            console.log("PLEASE PROVIDE ACCESS TO VIDEO AND AUDIO PERMISSIONS");
+        })
+    }, []);
     const handleClick = async () => {
         const regex =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         const matched = emailinput.current.value.match(regex);
@@ -41,21 +51,6 @@ const Create_meeting = () =>{
         }
         else
             console.log("WRONG EMAIL");
-    }
-    useEffect(()=>{
-        const turnon = async () => {
-            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        }
-        turnon();
-    }, []);
-    const webcam = async () => {
-        //get permissions for audio and video
-        // replace HTML with video feedback object
-        // localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        localvideo.current.srcObject = localStream;
-        setdisabled(false);
-        setIconDisabled("");
-        setPmsBtnDisabled("disabled");
     }
     const togglemute = () => {
         if(localStream.getTracks().find(track => track.kind === 'audio').enabled){
@@ -85,7 +80,7 @@ const Create_meeting = () =>{
             </div>
             <div className='video_button_display'>
                 <input ref={emailinput} />
-                <button className={classnames("btn btn_blue", pmsBtnDisabled)} onClick={webcam}>Video and Audio permissions</button>
+                {/* <button className={classnames("btn btn_blue", pmsBtnDisabled)} onClick={webcam}>Video and Audio permissions</button> */}
                 <button className="btn-action" onClick={togglemute} disabled={disabled}>
                     <div className={classnames(micIcon, iconDisabled, "icon")}></div>
                 </button>
