@@ -30,7 +30,7 @@ export async function sendEmail(req, res) {
     const msg = `
         <h1>Invitation to join Verboverse</h1>
         <p>You have been invited to join Verboverse!</p>
-        <p>Click <a href="http://localhost:3000/invite/${code}">here</a> to join.</p>
+        <p>Click <a href="https://verboverse.tech/invite/${code}">here</a> to join.</p>
     `;
 
     const email = {

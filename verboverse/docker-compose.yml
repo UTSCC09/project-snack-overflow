@@ -1,0 +1,52 @@
+version: '2'
+
+services:
+  # nginx reverse proxy    
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs 
+      - ./vhost:/etc/nginx/vhost.d 
+      - ./html:/usr/share/nginx/html 
+      
+  # reverse proxy let's encrypt companion
+  nginx-proxy-acme:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    restart: always
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./acme:/etc/acme.sh
+    environment:
+        - DEFAULT_EMAIL=vansvirm@gmail.com
+
+  # React frontend
+  frontend:
+    container_name: frontend
+    image: frontend
+    expose:
+      - 3000
+    # certificate information for let's encrypt
+    environment:
+      - VIRTUAL_HOST=verboverse.tech
+      - LETSENCRYPT_HOST=verboverse.tech
+  
+  # react backend      
+  backend:
+    container_name: backend
+    image: backend
+    expose:
+      - 9000
+    # certificate information for let's encrypt
+    environment:
+      - VIRTUAL_HOST=verboverse.tech/api
+      - LETSENCRYPT_HOST=verboverse.tech/api
+    

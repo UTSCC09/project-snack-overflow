@@ -2,7 +2,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-// require('dotenv').config();
 import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
