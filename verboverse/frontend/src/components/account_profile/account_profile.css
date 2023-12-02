@@ -1,0 +1,13 @@
+#composition-menu {
+  overflow: scroll;
+  width: 20vw;
+  height: 30vw;
+  border: 1px grey;
+  border-radius: 7%;
+  border-style: solid none;
+}
+
+#language_select {
+  display: flex;
+  flex-direction: row;
+}

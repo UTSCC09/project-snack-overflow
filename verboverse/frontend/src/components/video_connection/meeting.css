@@ -1,0 +1,98 @@
+.videos_display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.videos_align_top {
+  display: flex;
+  align-items: flex-start;
+}
+
+.remote_video {
+  width: 52vw;
+  height: 39vw;
+}
+
+.local_video {
+  width: 16vw;
+  height: 12vw;
+}
+
+.video_button_display {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.video_container {
+  position:relative;
+  display: inline-block;
+  z-index:0;
+}
+
+.overlay_text {
+  position:absolute;
+  top: 5px;
+  left: 1rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  z-index:1;
+}
+
+.subtitle {
+  position:absolute;
+  bottom: 5%;
+  left: 50%;
+  margin: auto;
+  transform: translate(-50%, 0);
+  background-color: rgba(255, 255, 255, 0.6);
+  z-index:1;
+}
+
+.btn-action {
+  outline: none;
+  border: none;
+  background: none;
+}
+
+.icon {
+  width: 80px;
+  height: 80px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.mute-icon {
+  background-image: url("./media/mute.png");
+}
+
+.unmute-icon {
+  background-image: url("./media/unmute.png");
+}
+
+.camera-on-icon {
+  background-image: url("./media/camera_on.png");
+}
+
+.camera-off-icon {
+  background-image: url("./media/camera_off.png");
+}
+
+.transcript-on-icon {
+  background-image: url("./media/transcript_on.png");
+}
+
+.transcript-off-icon {
+  background-image: url("./media/transcript_off.png");
+}
+
+.hangup-icon {
+  background-image: url("./media/hangup.png");
+}

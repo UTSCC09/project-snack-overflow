@@ -1,18 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
 body {
-  font-family: 'Syne Mono', monospace;
+  font-family: 'Bebas Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 80px 10px;
+  margin: 10px;
+}
+
+button {
+  font-family: 'Bebas Neue', sans-serif;
 }
 
 video {
   width: 40vw;
   height: 30vw;
-  margin: 2rem;
+  margin: 0.5rem 1rem;
+  border-radius: 19px;
   background: #2c3e50;
 }
 
@@ -20,4 +26,40 @@ video {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* This snippet of code was generated using: http://css3buttongenerator.com/ */
+
+.btn {
+  border-radius: 19px;
+  box-shadow: 0px 3px 6px #666666;
+  border: none;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 15px;
+  text-decoration: none;
+  margin: 1rem;
+}
+
+.large_btn {
+  padding: 2rem;
+}
+
+.small_btn {
+  padding: 10px;
+  font-size: 17px;
+  margin: 0rem;
+}
+
+.btn:hover {
+  background: #379cdb;
+  text-decoration: none;
+}
+
+.btn_pink {
+  background: #ed1897;
+}
+
+.btn_blue {
+  background: #62dee1;
 }

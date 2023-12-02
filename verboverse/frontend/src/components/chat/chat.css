@@ -1,0 +1,10 @@
+.chat-container {
+  overflow: scroll;
+  width: 16vw;
+  height: 25.5vw;
+  border: 2px #cccccc;
+  border-radius: 7%;
+  border-style: solid;
+  margin: 0.5rem 1rem;
+  text-align: left;
+}
