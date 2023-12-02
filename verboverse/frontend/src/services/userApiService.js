@@ -1,4 +1,6 @@
-const BASE_URL = process.env.BASE_URL; 
+env = require('dotenv').config();
+const BASE_URL = process.env.BASE_URL;
+console.log(BASE_URL); 
 
 const fetchTemplate = async (url, params = {}) => {
     const res = await fetch(`${BASE_URL}${url}`, params); 
