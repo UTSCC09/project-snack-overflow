@@ -1,6 +1,4 @@
-import { useCookies } from "react-cookie";
-
-const BASE_URL = 'http://localhost:9000/api';
+const BASE_URL = 'https://verboverse.tech/api';
 
 const fetchTemplate = async (url, params = {}) => {
     const res = await fetch(`${BASE_URL}${url}`, params); 
