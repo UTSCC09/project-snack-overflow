@@ -4,7 +4,8 @@ RUN mkdir -p /app
 WORKDIR /app
 COPY ./frontend /app
 # COPY ./.env /app
-RUN npm install
+RUN npm install -g npm@latest
+RUN npm cache clean --force
 RUN npm run build
 
 FROM --platform=linux/amd64 node:lts-slim as main
