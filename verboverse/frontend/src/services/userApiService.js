@@ -1,5 +1,5 @@
-// const BASE_URL = 'https://verboverse.tech/api';
-const BASE_URL = 'http://localhost:4000/api'; 
+const BASE_URL = 'https://verboverse.tech/api';
+// const BASE_URL = 'http://localhost:4000/api'; 
 
 const fetchTemplate = async (url, params = {}) => {
     const res = await fetch(`${BASE_URL}${url}`, params); 
@@ -9,6 +9,7 @@ const fetchTemplate = async (url, params = {}) => {
 export const signup = async (name, email, password) => {
     return await fetchTemplate('/signup', {
         method: 'POST',
+        mode: 'cors',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -19,6 +20,7 @@ export const signup = async (name, email, password) => {
 export const signin = async (email, password) => {
     const response = await fetchTemplate('/signin', {
         method: 'POST',
+        mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
             'credentials': 'include'
