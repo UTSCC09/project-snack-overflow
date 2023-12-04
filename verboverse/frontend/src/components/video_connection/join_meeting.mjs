@@ -6,7 +6,7 @@ import 'firebase/compat/firestore';
 import firebase from 'firebase/compat/app';
 import { useCookies } from 'react-cookie';
 import { signup, login, logout, me } from '../../services/userApiService.js';
-
+import { fetchUser } from '../account_profile/account_profile.mjs';
 const firebaseConfig = {
     apiKey: "AIzaSyDeiAhAi21ev36X-B0z9_sN4YexK7o1VY4",
     authDomain: "project-snack-overflow.firebaseapp.com",
@@ -42,15 +42,34 @@ const Join_meeting = () =>{
                                     callId: callinput.current.value, privilege: "answer"}});
     }
     useEffect(()=>{
+        const fetchUser = async () => {
+            let retryCount = 0;
+            const maxRetries = 3; 
+
+            while (retryCount < maxRetries) {
+                try {
+                    const response = await me(cookies.token);
+
+                    if (response.success) {
+                        setusername(response.user.name);
+                        break;
+                    }
+                    else{
+                        navigate('/');
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                }
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                retryCount++;
+            }
+        };
+        fetchUser();
         let meetingId = window.location.href.split("/")[4];
         if(meetingId === undefined)
             meetingId = "";
         callinput.current.value = meetingId;
-        const getusername = async()=>{
-            const response = await me(cookies.token);
-            setusername(response.user.name);
-        }
-        getusername();
     }, []);
     const webcam = async () => {
         //get permissions for audio and video

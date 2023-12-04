@@ -53,13 +53,13 @@ const remotevideo = React.createRef();
 let localStream;
 let remoteStream;
 function Video_connection({transcription_text, recognition}) {
-  const target = 'fr';
   const [micIcon, setMicIcon] = useState("unmute-icon");
   const [cameraIcon, setCameraIcon] = useState("camera-on-icon");
   const [transcriptIcon, setTranscriptIcon] = useState("transcript-on-icon");
   const [iconDisabled, setIconDisabled] = useState("disabled");
   const [disabled, setdisabled] = useState(true);
   const [text, settext] = useState('');
+  const [target, settarget] = useState('en-CA');
   const [cookies, setCookie] = useCookies(['token']);
   const [localusername, setlocalusername] = useState('Local Stream');
   const [remoteusername, setremoteusername] = useState('Remote Stream');
@@ -204,20 +204,36 @@ function Video_connection({transcription_text, recognition}) {
         throw new Error();
       }
     }
-    checksecurity().catch((e)=>{
-      navigate('/error', {state: {errormessage:error}});
-      return;
-    });
-    const getusername = async()=>{
-      const response = await me(cookies.token);
-      setlocalusername(response.user.name);
-    }
-    getusername();
-    webcam_on().then(()=>{
-      connectmeeting().then(() => {
-        answermeeting();
+    const fetchUser = async () => {
+      try {
+          const response = await me(cookies.token);
+          if (response.success) {
+            setlocalusername(response.user.name);
+            recognition.lang = response.user.language;
+            settarget(response.user.language);
+          }
+          else{
+            navigate('/');
+            throw Error("Not signed in");
+          }
+      } catch (error) {
+          throw Error('Error fetching user:', error);
+      }
+    };
+    fetchUser().then(()=>{
+      checksecurity().catch((e)=>{
+        navigate('/error', {state: {errormessage:error}});
+        return;
+      });
+      webcam_on().then(()=>{
+        connectmeeting().then(() => {
+          answermeeting();
+        })
+      });
+    }).catch((e)=>{
+        navigate('/');
+        return;
       })
-    });
   }, []); // Empty dependency array means this effect will run only once, on component mount
   const togglemute = async () => {
     if(localStream.getTracks().find(track => track.kind === 'audio').enabled){
@@ -298,6 +314,16 @@ function Video_connection({transcription_text, recognition}) {
     navigate(`/meetingend/${data.state.callId}`, {state: {privilege: deleter}})
   }
 
+  useEffect(()=>{
+    if(transcription_text === '')
+      return;
+    console.log(transcription_text);
+    if(channel.readyState === 'open'){
+      if(micIcon === "unmute-icon") // audio is on
+        channel.send(transcription_text);
+    }
+  }, [transcription_text]);
+
   channel.onmessage = async (event) => {
     if(transcriptIcon === "transcript-on-icon"){
       let incomingtext = await translate(cookies.token, event.data, target);
@@ -322,7 +348,6 @@ function Video_connection({transcription_text, recognition}) {
           <Chat channel={chatchannel} targetlanguage={target}/>
         </div>
       </div>
-      
       <div className='video_button_display'>
         <button className="btn-action" onClick={togglemute} disabled={disabled}>
           <div className={classnames(micIcon, iconDisabled, "icon")}></div>

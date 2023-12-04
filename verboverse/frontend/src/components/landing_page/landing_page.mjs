@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Card from '../card/card.mjs'
 import './landing_page.css'
 import logo from './media/logo.png'
@@ -10,8 +10,19 @@ import { useCookies } from "react-cookie";
 
 export default function LandingPage({ signedIn }) {
     const [cookies, setCookie] = useCookies(['token']);
-
     const navigate = useNavigate();
+    useEffect(()=>{
+        const fetchUser = async () => {
+            try {
+                const response = await me(cookies.token);
+                if (response.success)
+                    navigate('/home')
+            } catch (error) {
+                throw Error('Error fetching user:', error);
+            }
+        };
+        fetchUser();
+    },[]);
     const handleSignout = async () => {
         const response = await logout(cookies.token);
         if (response.success) {

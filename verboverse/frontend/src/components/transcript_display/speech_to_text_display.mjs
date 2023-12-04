@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Video_connection from '../video_connection/video_connection.mjs';
-
+import { useCookies } from "react-cookie";
+import { signup, login, logout, me } from '../../services/userApiService.js';
+import { useNavigate } from 'react-router-dom';
 let SpeechRecognition = window.webkitSpeechRecognition;
 let recognition = new SpeechRecognition();
 recognition.continuous = true;
@@ -10,12 +12,13 @@ let recognizing = false;
 let finalTranscript = '';
 let ignore_onend;
 let start_timestamp;
-var languageChosen = 'en-CA';
 
 function Transcript() {
+  const [cookies, setCookie] = useCookies(['token']);
   const [info, setInfo] = useState('Off');
   const [interimSpan, setInterimSpan] = useState('');
   const [finalSpan, setFinalSpan] = useState('');
+  const navigate = useNavigate();
   useEffect(() => {
     recognition.onstart = function() {
       recognizing = true;
@@ -58,24 +61,25 @@ function Transcript() {
         }
       }
       finalTranscript = capitalize(finalTranscript);
+      setInterimSpan(linebreak(finalTranscript) + linebreak(interimTranscript));
       setFinalSpan(linebreak(finalTranscript));
-      setInterimSpan(linebreak(interimTranscript));
     };
   });
+
   useEffect(()=>{
-    recognition.lang = languageChosen;
     recognition.start();
     start_timestamp = performance.now();
+    setInterval(()=>{
+      finalTranscript = '';
+    }, 5000);
   }, []);
 
   return(
     <div id="results">
       <Video_connection transcription_text={interimSpan} recognition={recognition}/>
-      <p>Transcript 
         {/* <span id="info"> ({info}):<br /></span> */}
         {/* <span id="finalSpan" style={{color:'black'}}>{finalSpan}</span> */}
-        {/* <span id="interimSpan" style={{color:'blue'}}>{interimSpan}</span> */}
-      </p>
+        <span id="interimSpan" style={{color:'blue'}}>{interimSpan}</span>
     </div>
   );
 }

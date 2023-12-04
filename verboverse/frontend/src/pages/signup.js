@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../services/userApiService.js';
 import toast, { Toaster } from 'react-hot-toast';
+import LanguageDropdown from '../components/language_dropdown/language_dropdown.mjs';
 
 const defaultTheme = createTheme();
 
@@ -103,6 +104,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
+                <LanguageDropdown />
               </Grid>
             </Grid>
             <Button

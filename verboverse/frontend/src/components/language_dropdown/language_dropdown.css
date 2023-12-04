@@ -1,10 +1,11 @@
 #composition-menu {
   overflow: scroll;
   width: 20vw;
-  height: 30vw;
+  height: 30%;
   border: 1px grey;
   border-radius: 7%;
   border-style: solid none;
+  background-color: white;
 }
 
 #language_select {

@@ -34,11 +34,31 @@ const Create_meeting = () =>{
     const localvideo = React.createRef();
     const navigate = useNavigate();
     useEffect(()=>{
-        const getusername = async()=>{
-            const response = await me(cookies.token);
-            setusername(response.user.name);
-        }
-        getusername();
+        const fetchUser = async () => {
+            let retryCount = 0;
+            const maxRetries = 3; 
+
+            while (retryCount < maxRetries) {
+                try {
+                    const response = await me(cookies.token);
+
+                    if (response.success) {
+                        setusername(response.user.name);
+                        break;
+                    }
+                    else{
+                        navigate('/');
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                retryCount++;
+            }
+        };
+        fetchUser();
     }, []);
     const handleClick = async () => {
         const regex =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
