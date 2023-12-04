@@ -49,4 +49,9 @@ services:
     environment:
       - VIRTUAL_HOST=verboverse.tech/api
       - LETSENCRYPT_HOST=verboverse.tech/api
-    
+  
+  Memcached:
+    image: memcached
+    ports:
+      - "11211:11211"
+    restart: always
