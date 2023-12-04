@@ -1,7 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Popper, ClickAwayListener } from '@mui/base';
 import { Avatar, Drawer, Sheet, DialogTitle, ModalClose, Divider, DialogContent, Typography,
          MenuItem, Button, MenuList, styled } from '@mui/joy';
+import { langs } from './languages.mjs';
+import { me, updateLanguage } from '../../services/userApiService.js';
+import './account_profile.css';
+import { useCookies } from "react-cookie";
 
 const Popup = styled(Popper)({
     zIndex: 1000,
@@ -11,7 +15,38 @@ const AccountProfile = () => {
     const buttonRef = useRef(null);
     const [openProfile, setOpenProfile] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
-    const [language, setLanguage] = useState('English (CA)');
+    const [language, setLanguage] = useState('English');
+    const [user, setUser] = useState(null);
+    const [cookies, setCookie] = useCookies(['token']);
+    const [username, setusername] = useState('Local Stream');
+    const [email, setemail] = useState('Local Stream email');
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            let retryCount = 0;
+            const maxRetries = 3; 
+
+            while (retryCount < maxRetries) {
+                try {
+                    const response = await me(cookies.token);
+
+                    if (response.success) {
+                        setUser(response.user);
+                        setusername(response.user.name);
+                        setemail(response.user.email);
+                        break;
+                    }
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                retryCount++;
+            }
+        };
+
+        fetchUser();
+    }, []);
 
     const handleCloseDropdown = () => {
         setOpenDropdown(false);
@@ -25,6 +60,13 @@ const AccountProfile = () => {
         setOpenDropdown(false);
         }
     };
+
+    const handleLanguageChange = (language) => {
+        handleCloseDropdown(); 
+        setLanguage(language);
+        const id = user._id;
+        updateLanguage(cookies.token, id, language);
+    }
 
     return(
         <div>
@@ -59,16 +101,17 @@ const AccountProfile = () => {
                     <ModalClose />
                     <Divider sx={{ mt: 'auto' }} />
                     <DialogContent sx={{ gap: 2 }}>
-                        <Typography level="title-md" fontWeight="bold" sx={{ mt: 1 }}>
-                            Username:
+                        <Typography align="left" level="title-md" fontWeight="bold" sx={{ mt: 1, mr: 1 }}>
+                            Username: {username}
                         </Typography>
-                        <Typography level="title-md" fontWeight="bold" sx={{ mt: 1 }}>
-                            Email:
+                        <Typography align="left" level="title-md" fontWeight="bold" sx={{ mt: 1, mr: 1 }}>
+                            Email: {email}
                         </Typography>
-                        <Typography level="title-md" fontWeight="bold" sx={{ mt: 1 }}>
+                        <div id="language_select">
+                        <Typography align="left" level="title-md" fontWeight="bold" sx={{ mt: 1, mr: 1 }}>
                             Primary Language:
                         </Typography>
-                        <div>
+                        
                             <Button
                                 ref={buttonRef}
                                 id="composition-button"
@@ -98,23 +141,23 @@ const AccountProfile = () => {
                                 },
                                 ]}
                             >
-                                <ClickAwayListener
-                                onClickAway={(event) => {
-                                    if (event.target !== buttonRef.current) {
-                                    handleCloseDropdown();
-                                    }
-                                }}
-                                >
-                                <MenuList
-                                    variant="outlined"
-                                    onKeyDown={handleListKeyDown}
-                                    sx={{ boxShadow: 'md' }}
-                                >
-                                    <MenuItem onClick={ () => { handleCloseDropdown(); setLanguage('English (CA)');}}>English (CA)</MenuItem>
-                                    <MenuItem onClick={ () => { handleCloseDropdown(); setLanguage('French (CA)');}}>French (CA)</MenuItem>
-                                    <MenuItem onClick={ () => { handleCloseDropdown(); setLanguage('Spanish');}}>Spanish</MenuItem>
-                                </MenuList>
-                                </ClickAwayListener>
+                                    <ClickAwayListener
+                                    onClickAway={(event) => {
+                                        if (event.target !== buttonRef.current) {
+                                        handleCloseDropdown();
+                                        }
+                                    }}
+                                    >
+                                    <MenuList
+                                        variant="outlined"
+                                        onKeyDown={handleListKeyDown}
+                                        sx={{ boxShadow: 'md' }}
+                                    >
+                                        {langs.map(([lang, [id]]) => (
+                                            <MenuItem key={id} onClick={ () => { handleLanguageChange(lang) }}>{lang}</MenuItem>
+                                        ))}
+                                    </MenuList>
+                                    </ClickAwayListener>
                             </Popup>
                         </div>
                     </DialogContent>

@@ -45,6 +45,12 @@ video {
   padding: 2rem;
 }
 
+.small_btn {
+  padding: 10px;
+  font-size: 17px;
+  margin: 0rem;
+}
+
 .btn:hover {
   background: #379cdb;
   text-decoration: none;

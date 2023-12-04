@@ -16,7 +16,7 @@ import {memcacheRoutes} from './routes/memcacheRoutes.mjs';
 import {translateRoutes} from './routes/translateRoutes.mjs';
 
 // enable cors
-app.use(cors());
+// app.use(cors());
 
 // DATABASE CONNECTION
 mongoose.connect(process.env.DATABASE, {
@@ -32,7 +32,11 @@ mongoose.connect(process.env.DATABASE, {
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}
+));
 
 // ROUTES MIDDLEWARE
 app.use('/api', authRoutes);

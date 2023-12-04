@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import classnames from 'classnames';
 import 'firebase/compat/firestore';
 import firebase from 'firebase/compat/app';
+import { useCookies } from 'react-cookie';
+import { signup, login, logout, me } from '../../services/userApiService.js';
+
 const firebaseConfig = {
     apiKey: "AIzaSyDeiAhAi21ev36X-B0z9_sN4YexK7o1VY4",
     authDomain: "project-snack-overflow.firebaseapp.com",
@@ -21,17 +24,6 @@ const firebaseConfig = {
   
   const firestore = firebase.firestore();
   
-  const servers = {
-      iceServers: [
-        {
-          urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
-        },
-      ],
-      iceCandidatePoolSize: 10,
-    };
-  
-const pc = new RTCPeerConnection(servers);
-
 let localStream;
 const callinput = React.createRef();
 const Join_meeting = () =>{
@@ -40,22 +32,29 @@ const Join_meeting = () =>{
     const [iconDisabled, setIconDisabled] = useState("disabled");
     const [pmsBtnDisabled, setPmsBtnDisabled] = useState("");
     const [disabled, setdisabled] = useState(true);
+    const [username, setusername] = useState('Local Stream');
+    const [cookies, setCookie] = useCookies(['token']);
     const localvideo = React.createRef();
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/video', {state: {video: localStream.getTracks().find(track => track.kind === 'video').enabled, 
+        navigate(`/meeting/${callinput.current.value}`, {state: {video: localStream.getTracks().find(track => track.kind === 'video').enabled, 
                                     audio: localStream.getTracks().find(track => track.kind === 'audio').enabled, 
                                     callId: callinput.current.value, privilege: "answer"}});
     }
     useEffect(()=>{
-        const turnon = async () => {
-            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        let meetingId = window.location.href.split("/")[4];
+        if(meetingId === undefined)
+            meetingId = "";
+        callinput.current.value = meetingId;
+        const getusername = async()=>{
+            const response = await me(cookies.token);
+            setusername(response.user.name);
         }
-        turnon();
+        getusername();
     }, []);
     const webcam = async () => {
         //get permissions for audio and video
-        // localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         // replace HTML with video feedback object
         localvideo.current.srcObject = localStream;
         setdisabled(false);
@@ -101,7 +100,7 @@ const Join_meeting = () =>{
         <div className='videos_display'>
             <h3>Video Preview</h3>
             <div className='video_container'>
-                <p className='overlay_text'>Local Stream</p>
+                <p className='overlay_text'>{username}</p>
                 <video ref={localvideo} autoPlay playsInline muted="muted"></video>
             </div>
             <div className='video_button_display'>

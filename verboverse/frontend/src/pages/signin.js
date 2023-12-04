@@ -12,25 +12,28 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { signin } from '../services/userApiService.js';
+import { me, signin } from '../services/userApiService.js';
 import toast, { Toaster } from 'react-hot-toast';
+import { useState } from 'react';
+import { useCookies } from "react-cookie";
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const [cookies, setCookie] = useCookies(['token']);
 
   const handleSubmit = async (event) => {
+
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
     const response = await signin(data.get('email'), data.get('password'));
-    console.log(response);
+
     if (response.success) {
-        toast.success("Successfully signed in!"); 
+        const receivedToken = response.token;
+        setCookie('token', receivedToken);
+        const user = await me(cookies.token);
         directToHome();
+        toast.success("Successfully signed in! ");
     } else {
         toast.error('Failed to sign in!');
     }
@@ -41,8 +44,8 @@ export default function SignIn() {
     navigate('/signup');
   };
 
-  const directToHome = () => {
-    navigate('/');
+  const directToHome = async () => {
+    navigate('/home');
   }
 
   return (

@@ -4,7 +4,7 @@ import User from '../models/userModel.mjs';
 
 // check if user is authenticated
 export async function isAuthenticated (req, res, next) {
-    const {token} = req.cookies;
+    const token = req.cookies.token;
     if (!token) {
         return next(new ErrorResponse('You must log in.', 401));
     }

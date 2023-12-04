@@ -1,0 +1,129 @@
+*::-webkit-scrollbar {
+    display: none;
+}
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.top {
+    background-color: antiquewhite;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.top .left {
+    background-color: whitesmoke;
+    flex: 0.5;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.top .left .title {
+    width: 100%;
+}
+
+.top .left img {
+    width: 30%;
+    font-size: 4rem;
+}
+
+.top .left .typewriter {
+    width: 100%;
+}
+
+.top .right {
+    background-color: black;
+    flex: 0.5;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.top .right .bg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4;
+}
+
+.top .right .bg:hover {
+    opacity: 0.8;
+    transition: all 0.5s ease-in-out;
+}
+
+.top .right .account-profile {
+    position: absolute;
+    margin-top: 80px;
+    width: 100%;
+    height: 90%;
+    background-color: blue;
+}
+
+.top .right .button-container {
+    position: absolute;
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.top .right .button-container .btn {
+    font-family: 'Roboto', sans-serif;
+    background-color: transparent;
+    cursor: pointer;
+    width: 60%;
+    border-radius: 30px;
+    border: 2px solid white;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.top .right .button-container .btn:hover {
+    background-color: bisque;
+    color: black;
+    transition: all 0.5s ease-in-out;
+}
+
+.navbar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 30px;
+}
+
+.navbar .logout-btn {
+    font-family: 'Roboto', sans-serif;
+    background-color: lightskyblue;
+    cursor: pointer;
+    padding: 5px;
+    width: 100px;
+    border-radius: 30px;
+    border: 2px solid white;
+    font-weight: bold;
+}
+
+.navbar .logout-btn:hover {
+    background-color: darkblue;
+    color: white;
+    transition: all 0.5s ease-in-out;
+}
