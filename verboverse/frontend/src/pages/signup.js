@@ -103,9 +103,9 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <LanguageDropdown />
-              </Grid>
+              </Grid> */}
             </Grid>
             <Button
               type="submit"

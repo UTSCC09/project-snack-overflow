@@ -1,4 +1,6 @@
 const BASE_URL = 'https://verboverse.tech/api'; 
+// const BASE_URL = 'http://localhost:4000/api'; 
+
 
 const fetchTemplate = async (url, params = {}) => {
     const res = await fetch(`${BASE_URL}${url}`, params); 

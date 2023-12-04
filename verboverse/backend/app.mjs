@@ -6,6 +6,8 @@ import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 const app = express();
+const BASE_URL = 'https://verboverse.tech'; 
+// const BASE_URL = 'http://localhost:3000'; 
 
 import {errorHandler} from './middleware/error.mjs';
 
@@ -33,7 +35,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'https://verboverse.tech',
+    origin: `${BASE_URL}`,
     credentials: true,
 }
 ));
@@ -48,7 +50,7 @@ app.use('/api/translate', translateRoutes);
 app.use(errorHandler);
 
 //PORT
-const port = process.env.PORT|| 9000;
+const port = process.env.PORT|| 4000;
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
