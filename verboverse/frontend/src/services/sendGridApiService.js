@@ -1,4 +1,4 @@
-const BASE_URL = process.env.BASE_URL; 
+const BASE_URL = 'http://localhost:9000/api'; 
 
 const fetchTemplate = async (url, params = {}) => {
     const res = await fetch(`${BASE_URL}${url}`, params); 

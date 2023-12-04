@@ -209,8 +209,8 @@ function Video_connection({transcription_text, recognition}) {
           const response = await me(cookies.token);
           if (response.success) {
             setlocalusername(response.user.name);
-            recognition.lang = response.user.language;
-            settarget(response.user.language);
+            recognition.lang = 'fr-FR';
+            settarget('fr-FR');
           }
           else{
             navigate('/');
