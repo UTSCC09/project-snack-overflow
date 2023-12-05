@@ -45,8 +45,8 @@ We use the three layer framework architecture where the frontend communicates wi
 ## Contributions
 
 Vanshika Virmani: 
-    - Set up the backend using MongoDb 
-    - Completed the pages for login and signin 
+- Set up the backend using MongoDb 
+- Completed the pages for login and signin 
     - Completed user authentication in the backend using JWT tokens
     - Set up the memcache in the backend
     - Implemented the backend for Sendgrid feature for sending email invites to registered users
