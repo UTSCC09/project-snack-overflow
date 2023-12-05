@@ -45,33 +45,33 @@ We use the three layer framework architecture where the frontend communicates wi
 ## Contributions
 
 Vanshika Virmani: 
-    - Set up the backend using MongoDb 
-    - Completed the pages for login and signin 
-    - Completed user authentication in the backend using JWT tokens
-    - Set up the memcache in the backend
-    - Implemented the backend for Sendgrid feature for sending email invites to registered users
-    - Did a refactoring of frontend code to redesign the UI for landing page and home page
-    - Integrated user authentication on frontend
-    - Application deployment using Google Cloud Platform and Vercel
+- Set up the backend using MongoDb 
+- Completed the pages for login and signin 
+- Completed user authentication in the backend using JWT tokens
+- Set up the memcache in the backend
+- Implemented the backend for Sendgrid feature for sending email invites to registered users
+- Did a refactoring of frontend code to redesign the UI for landing page and home page
+- Integrated user authentication on frontend
+- Application deployment using Google Cloud Platform and Vercel
     
  Cindy Ji: 
-    - WebSpeech API
-    - Google Translation
-    - UI for Chat Box
-    - CSS for the application
-    - Data State for various functionalities (Audio, Video,  Transcription)
-    - Language Mapping
-    - Account Information
+- WebSpeech API
+- Google Translation
+- UI for Chat Box
+- CSS for the application
+- Data State for various functionalities (Audio, Video,  Transcription)
+- Language Mapping
+- Account Information
 
  Rubaiz Momin: 
-    - Meeting Connection
-    - Google Translation
-    - Data Channels
-    - Chat Box Functionality
-    - Video Preview Meeting
-    - WebSpeechAPI 
-    - Security for frontend endpoints
-    - Backend CORS
+- Meeting Connection
+- Google Translation
+- Data Channels
+- Chat Box Functionality
+- Video Preview Meeting
+- WebSpeechAPI 
+- Security for frontend endpoints
+- Backend CORS
 
 # One more thing? 
 
